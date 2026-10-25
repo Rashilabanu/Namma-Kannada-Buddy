@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Namma Kannada Buddy</title>
+
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f5f7ef;color:#24352b}
+header{background:#174b35;color:white;padding:22px 8%;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+header h2{margin:0}
+header span{color:#ffd36a}
+.brand{display:flex;align-items:center;gap:12px}
+.logo{width:55px;height:55px;border-radius:50%;background:#fff3d6;color:#176b45;display:flex;align-items:center;justify-content:center;font-size:32px;font-weight:bold;border:2px solid #b9d7a8}
+.brand small{color:#d8ead9;display:block;margin-top:5px}
+.hero{text-align:center;padding:55px 20px;background:linear-gradient(135deg,#e3f4d9,#fff3d6)}
+.hero h1{font-size:clamp(30px,5vw,48px);margin:10px}
+.hero p{font-size:17px;line-height:1.6}
+.search{padding:13px;width:min(90%,430px);border:1px solid #ccc;border-radius:25px;font-size:16px}
+main{max-width:1100px;margin:30px auto;padding:0 18px}
+h2.section{margin-top:35px}
+.categories{display:flex;gap:10px;flex-wrap:wrap;margin:18px 0}
+button{cursor:pointer;border:0;border-radius:10px;padding:12px 16px;background:#216747;color:white;font-weight:bold}
+button:hover{background:#123f2b}
+.categories button{background:white;color:#24543c;border:1px solid #cddbcf}
+.categories button.active{background:#216747;color:white}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px}
+.card{background:white;border-radius:15px;padding:20px;box-shadow:0 4px 15px #193c1510;border:1px solid #e3e9df}
+.kn{font-size:25px;color:#176b45;font-weight:bold;margin:8px 0}
+.meaning{color:#58665d;line-height:1.7}
+.card button{margin:8px 5px 0 0;padding:9px 12px}
+.panel{background:white;padding:24px;border-radius:15px;margin-top:28px}
+#question{font-size:20px;line-height:1.6}
+#answers{display:flex;gap:10px;flex-wrap:wrap;margin:15px 0}
+#feedback{font-weight:bold;margin:12px 0}
+footer{text-align:center;padding:25px;background:#174b35;color:white;margin-top:40px}
+.small{font-size:13px;color:#66736a}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="brand">
+    <div class="logo">ಕ</div>
+    <div>
+      <h2>Namma <span>Kannada</span> Buddy</h2>
+      <small>Learn • Speak • Connect</small>
+    </div>
+  </div>
+  <div>Learn • Speak • Explore</div>
+</header>
+
+<section class="hero">
+  <div>ನಮಸ್ಕಾರ • Vanakkam • Hello</div>
+  <h1>Kannada made easy for everyone!</h1>
+  <p>Learn practical Kannada through Tamil and English.<br>
+  Useful words and phrases for everyday life.</p>
+
+  <input class="search" id="search"
+  placeholder="🔎 Search words or meanings..."
+  oninput="render()">
+  <p class="small">Search in Kannada, English, or Tamil.</p>
+</section>
+
+<main>
+  <h2 class="section">Explore Everyday Kannada</h2>
+  <p>Choose a situation to learn useful Kannada phrases.</p>
+
+  <div class="categories" id="categories">
+    <button class="active" onclick="setCategory('All',this)">All</button>
+    <button onclick="setCategory('Basics',this)">👋 Basics</button>
+    <button onclick="setCategory('Travel',this)">🚌 Travel</button>
+    <button onclick="setCategory('Shopping',this)">🛍️ Shopping</button>
+    <button onclick="setCategory('Healthcare',this)">🏥 Healthcare</button>
+    <button onclick="setCategory('College',this)">🎓 College</button>
+  </div>
+
+  <div class="cards" id="cards"></div>
+
+  <section class="panel">
+    <h2>🎯 Kannada Quick Quiz</h2>
+    <p class="small">Choose the correct English meaning.</p>
+    <div id="question"></div>
+    <div id="answers"></div>
+    <div id="feedback" aria-live="polite"></div>
+    <p>Score: <b id="score">0</b> |
+    Question: <b id="count">1</b></p>
+    <button onclick="nextQuestion()">Next Question →</button>
+  </section>
+
+  <section class="panel">
+    <h2>💡 Why Namma Kannada Buddy?</h2>
+    <p>• Learn phrases for real-life situations.</p>
+    <p>• Understand Kannada with Tamil and English meanings.</p>
+    <p>• Practice vocabulary through an interactive quiz.</p>
+    <p>• Listen to Kannada pronunciation where your browser supports it.</p>
+    <p class="small">Educational language-learning prototype. Translations and pronunciation should be reviewed by fluent Kannada speakers.</p>
+  </section>
+</main>
+
+<footer>
+  ನಮ್ಮ ಕನ್ನಡ • Namma Kannada Buddy<br><br>
+  Connecting people through language and culture 🇮🇳
+</footer>
+
+<script>
+const phrases = [
+  {kn:"ನಮಸ್ಕಾರ",en:"Hello",ta:"வணக்கம்",cat:"Basics"},
+  {kn:"ಧನ್ಯವಾದಗಳು",en:"Thank you",ta:"நன்றி",cat:"Basics"},
+  {kn:"ನಿಮ್ಮ ಹೆಸರು ಏನು?",en:"What is your name?",ta:"உங்கள் பெயர் என்ன?",cat:"Basics"},
+  {kn:"ನನಗೆ ಕನ್ನಡ ಸ್ವಲ್ಪ ಗೊತ್ತು",en:"I know a little Kannada",ta:"எனக்குக் கொஞ்சம் கன்னடம் தெரியும்",cat:"Basics"},
+  {kn:"ಇದು ಎಷ್ಟು?",en:"How much is this?",ta:"இது எவ்வளவு?",cat:"Shopping"},
+  {kn:"ಕಡಿಮೆ ಮಾಡಿ",en:"Please reduce the price",ta:"விலையைக் குறைக்கவும்",cat:"Shopping"},
+  {kn:"ಬಸ್ ನಿಲ್ದಾಣ ಎಲ್ಲಿದೆ?",en:"Where is the bus stop?",ta:"பேருந்து நிலையம் எங்கே?",cat:"Travel"},
+  {kn:"ನನಗೆ ಸಹಾಯ ಬೇಕು",en:"I need help",ta:"எனக்கு உதவி வேண்டும்",cat:"Travel"},
+  {kn:"ರೈಲು ನಿಲ್ದಾಣ ಎಲ್ಲಿದೆ?",en:"Where is the railway station?",ta:"ரயில் நிலையம் எங்கே?",cat:"Travel"},
+  {kn:"ನನಗೆ ಆರೋಗ್ಯ ಸರಿಯಿಲ್ಲ",en:"I am not feeling well",ta:"எனக்கு உடல்நலம் சரியில்லை",cat:"Healthcare"},
+  {kn:"ಆಸ್ಪತ್ರೆ ಎಲ್ಲಿದೆ?",en:"Where is the hospital?",ta:"மருத்துவமனை எங்கே?",cat:"Healthcare"},
+  {kn:"ನನಗೆ ನೀರು ಬೇಕು",en:"I need water",ta:"எனக்குத் தண்ணீர் வேண்டும்",cat:"Basics"},
+  {kn:"ತರಗತಿ ಎಲ್ಲಿದೆ?",en:"Where is the classroom?",ta:"வகுப்பறை எங்கே?",cat:"College"},
+  {kn:"ದಯವಿಟ್ಟು ನಿಧಾನವಾಗಿ ಮಾತನಾಡಿ",en:"Please speak slowly",ta:"தயவுசெய்து மெதுவாகப் பேசுங்கள்",cat:"Basics"},
+  {kn:"ನನಗೆ ಅರ್ಥವಾಗಲಿಲ್ಲ",en:"I did not understand",ta:"எனக்குப் புரியவில்லை",cat:"Basics"}
+];
+
+let category = "All";
+
+function setCategory(c, button) {
+  category = c;
+
+  document.getElementById("search").value = "";
+
+  document.querySelectorAll(".categories button")
+    .forEach(b => b.classList.remove("active"));
+
+  button.classList.add("active");
+  render();
+}
+
+function render() {
+  const q = document.getElementById("search").value
+    .trim().toLowerCase();
+
+  const data = phrases.filter(p => {
+    // Search searches ALL categories.
+    // When search is empty, the selected category is used.
+    const matchesCategory = q !== ""
+      || category === "All"
+      || p.cat === category;
+
+    const matchesSearch = q === "" ||
+      [p.kn, p.en, p.ta, p.cat].some(value =>
+        value.toLowerCase().includes(q)
+      );
+
+    return matchesCategory && matchesSearch;
+  });
+
+  document.getElementById("cards").innerHTML = data.map((p, i) => `
+    <article class="card">
+      <div>${p.cat}</div>
+      <div class="kn">${p.kn}</div>
+      <div class="meaning">
+        <b>English:</b> ${p.en}<br>
+        <b>Tamil:</b> ${p.ta}
+      </div>
+      <button onclick="speak(${JSON.stringify(p.kn)})">🔊 Listen</button>
+      <button onclick="copyPhrase(${JSON.stringify(p.kn)})">📋 Copy</button>
+    </article>
+  `).join("") ||
+    "<p>No matching phrases found. Try another search.</p>";
+}
+
+function speak(text) {
+  if ("speechSynthesis" in window) {
+    speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = "kn-IN";
+    speechSynthesis.speak(utterance);
+  } else {
+    alert("Speech is not supported in this browser.");
+  }
+}
+
+function copyPhrase(text) {
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text)
+      .then(() => alert("Kannada phrase copied!"))
+      .catch(() => alert(text));
+  } else {
+    alert(text);
+  }
+}
+
+const quiz = [
+  {q:"ನಮಸ್ಕಾರ means…",a:["Goodbye","Hello","Sorry"],correct:1},
+  {q:"ಧನ್ಯವಾದಗಳು means…",a:["Thank you","Good morning","Help me"],correct:0},
+  {q:"ಇದು ಎಷ್ಟು? means…",a:["Where is the bus?","How much is this?","I need water"],correct:1},
+  {q:"ಆಸ್ಪತ್ರೆ ಎಲ್ಲಿದೆ? means…",a:["Where is the hospital?","What is your name?","Where is the college?"],correct:0},
+  {q:"ನನಗೆ ನೀರು ಬೇಕು means…",a:["I am hungry","I need water","I need help"],correct:1}
+];
+
+let qi = 0;
+let score = 0;
+let answered = false;
+
+function loadQuestion() {
+  answered = false;
+  const q = quiz[qi % quiz.length];
+
+  document.getElementById("question").textContent = q.q;
+
+  document.getElementById("answers").innerHTML = q.a.map((a, i) =>
+    `<button onclick="answer(${i})"
+      style="background:#eaf2e8;color:#214b35">${a}</button>`
+  ).join("");
+
+  document.getElementById("feedback").textContent = "";
+  document.getElementById("count").textContent = qi + 1;
+}
+
+function answer(i) {
+  if (answered) return;
+
+  answered = true;
+  const q = quiz[qi % quiz.length];
+
+  if (i === q.correct) {
+    score++;
+    document.getElementById("feedback").textContent =
+      "✅ Correct! Well done.";
+    document.getElementById("feedback").style.color = "green";
+  } else {
+    document.getElementById("feedback").textContent =
+      "❌ Correct answer: " + q.a[q.correct];
+    document.getElementById("feedback").style.color = "crimson";
+  }
+
+  document.getElementById("score").textContent = score;
+}
+
+function nextQuestion() {
+  qi++;
+  loadQuestion();
+}
+
+render();
+loadQuestion();
+</script>
+
+</body>
+</html>
